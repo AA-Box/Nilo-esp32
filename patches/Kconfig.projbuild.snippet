@@ -1,0 +1,8 @@
+# Add this entry inside the `choice BOARD_TYPE` block of main/Kconfig.projbuild.
+#
+# scripts/install.py does it for you and is idempotent; this file exists so the change is
+# reviewable as a diff and applicable by hand on a tree the script does not recognise.
+
+    config BOARD_TYPE_NILO_ROBOT
+        bool "Nilo Robot"
+        depends on IDF_TARGET_ESP32S3

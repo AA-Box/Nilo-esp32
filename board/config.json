@@ -1,0 +1,13 @@
+{
+    "type": "nilo-robot",
+    "target": "esp32s3",
+    "builds": [
+        {
+            "name": "nilo-robot",
+            "sdkconfig_append": [
+                "CONFIG_ESPTOOLPY_FLASHSIZE_16MB=y",
+                "CONFIG_USE_DEVICE_AEC=y"
+            ]
+        }
+    ]
+}

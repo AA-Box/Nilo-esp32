@@ -1,0 +1,59 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  host-tests:
+    name: Host tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Motion, safety, drive and schema
+        run: make -C host
+      - name: Installer
+        run: python3 scripts/test_install.py
+
+  format:
+    name: Formatting
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install clang-format==20.1.0
+      - name: clang-format
+        run: clang-format --dry-run -Werror board/*.h board/*.cc host/*.h host/*.cc
+
+  firmware-build:
+    # The real build, in the upstream toolchain's own container.
+    #
+    # It runs only when the repository variable FIRMWARE_REPO is set, because the firmware
+    # this board is installed into lives in a separate repository and this one does not
+    # hardcode which. Set it (Settings -> Secrets and variables -> Actions -> Variables) to
+    # the clone URL, and every pull request gets a real `idf.py build` of this exact board.
+    name: ESP-IDF build
+    runs-on: ubuntu-latest
+    if: ${{ vars.FIRMWARE_REPO != '' }}
+    container: espressif/idf:v6.1
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: board-repo
+      - name: Clone the firmware
+        run: git clone --depth 1 "${{ vars.FIRMWARE_REPO }}" firmware
+      - name: Install the board
+        run: python3 board-repo/scripts/install.py firmware
+      - name: Build
+        shell: bash
+        working-directory: firmware
+        run: |
+          . "$IDF_PATH/export.sh"
+          python scripts/build.py nilo-robot
