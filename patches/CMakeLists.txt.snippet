@@ -1,0 +1,10 @@
+# Add this branch to the board-type chain in main/CMakeLists.txt.
+#
+# The fonts are sized for a 240x240 panel. The emoji collection is optional; the robot
+# draws its own face through the expression controller rather than through emoji, so it is
+# left out here on purpose.
+
+elseif(CONFIG_BOARD_TYPE_NILO_ROBOT)
+    set(BOARD_DIR "nilo-robot")
+    set(BUILTIN_TEXT_FONT font_puhui_basic_16_4)
+    set(BUILTIN_ICON_FONT font_awesome_16_4)

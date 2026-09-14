@@ -1,0 +1,23 @@
+# Formatting for the board sources.
+#
+# These values match the upstream firmware's own configuration, which is not a style
+# preference: the board is compiled inside that tree, and a board formatted differently
+# from everything around it shows up as noise in every diff that touches it.
+---
+Language: Cpp
+BasedOnStyle: Google
+AccessModifierOffset: -4
+AllowShortFunctionsOnASingleLine: All
+ColumnLimit: 100
+ConstructorInitializerIndentWidth: 4
+ContinuationIndentWidth: 4
+DerivePointerAlignment: false
+IndentCaseLabels: true
+IndentWidth: 4
+NamespaceIndentation: None
+PointerAlignment: Left
+SortIncludes: true
+SpacesBeforeTrailingComments: 2
+Standard: Latest
+TabWidth: 4
+UseTab: Never
